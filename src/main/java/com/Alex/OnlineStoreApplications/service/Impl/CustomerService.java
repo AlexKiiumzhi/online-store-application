@@ -52,8 +52,7 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public BigDecimal buy(BuyingDto buyingDto) {
-//        List<Product> products = new ArrayList<>();
- //       List<BigDecimal> productsPrice = new ArrayList<>();
+
         Optional<Customer> optionalCustomer = customerRepository.findById(buyingDto.getId());
         if (optionalCustomer.isPresent()) {
             Customer customer = customerRepository.getOne(buyingDto.getId());
@@ -63,19 +62,6 @@ public class CustomerService implements ICustomerService {
                         .filter(Optional::isPresent)
                         .map(optionalProduct -> optionalProduct.get().getPrice())
                         .reduce(new BigDecimal(0), BigDecimal::add);
-                //            List<Long> Ids = buyingDto.getProductIds();
-//            for (Long id : Ids) {
-//                Optional<Product> optionalProduct = productRepository.findById(id);
-//                if (optionalProduct.isPresent()) {
-//                    products.add(productRepository.getOne(id));
-//                } else {
-//                    throw new ProductNotFoundException();
-//                }
-//            }
-//            for (Product p : products) {
-//                productsPrice.add(p.getPrice());
-//            }
-//            return productsPrice;
             } else {
                 throw new CustomerIsNotSignedIn();
             }
