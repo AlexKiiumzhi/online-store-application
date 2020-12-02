@@ -14,7 +14,7 @@ CREATE TABLE customer
     phone_number varchar(20) NOt NULL,
     password     varchar(50) NOT NULL,
     created_at   datetime    NOT NULL,
-    is_signed_in tinyint(1),
+    is_signed_in tinyint(1) default 0,
     unique (email),
     PRIMARY KEY (id)
 

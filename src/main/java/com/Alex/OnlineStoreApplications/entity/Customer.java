@@ -1,7 +1,6 @@
 package com.Alex.OnlineStoreApplications.entity;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +32,9 @@ public class Customer implements IEntity {
     private LocalDateTime createdAt;
 
     @Column(name = "is_signed_in")
-    private Boolean isSignedIn ;
+    private Boolean isSignedIn;
 
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "customer_file", joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "file_id"))
     private List<File> files = new ArrayList<>();

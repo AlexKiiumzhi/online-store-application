@@ -31,7 +31,7 @@ public class CustomerService implements ICustomerService {
             Customer newCustomer = customerRepository.save(mapRegistrationDtoToCustomer(registrationDto));
             return newCustomer.getId();
         } else {
-            throw new CustomerNotFoundException();
+            throw new RuntimeException("This email has already been registered");
         }
     }
 
@@ -47,15 +47,19 @@ public class CustomerService implements ICustomerService {
 
     @Override
     public void deleteCustomer(Long id) {
-        customerRepository.deleteById(id);
+        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+        if (optionalCustomer.isPresent()) {
+            customerRepository.deleteById(id);
+        } else {
+            throw new CustomerNotFoundException();
+        }
     }
 
     @Override
     public BigDecimal buy(BuyingDto buyingDto) {
-
         Optional<Customer> optionalCustomer = customerRepository.findById(buyingDto.getId());
         if (optionalCustomer.isPresent()) {
-            Customer customer = customerRepository.getOne(buyingDto.getId());
+            Customer customer = optionalCustomer.get();
             if (customer.getSignedIn()) {
                 return buyingDto.getProductIds().stream()
                         .map(id -> productRepository.findById(id))
