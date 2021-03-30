@@ -1,11 +1,10 @@
 package com.Alex.OnlineStoreApplications.service;
 
-import com.Alex.OnlineStoreApplications.entity.Category;
-import com.Alex.OnlineStoreApplications.entity.Customer;
+import com.Alex.OnlineStoreApplications.entity.User;
 import com.Alex.OnlineStoreApplications.entity.Product;
-import com.Alex.OnlineStoreApplications.repository.CustomerRepository;
+import com.Alex.OnlineStoreApplications.repository.UserRepository;
 import com.Alex.OnlineStoreApplications.repository.ProductRepository;
-import com.Alex.OnlineStoreApplications.service.Impl.CustomerService;
+import com.Alex.OnlineStoreApplications.service.Impl.UserServiceImpl;
 import com.Alex.OnlineStoreApplications.service.dto.BuyingDto;
 import com.Alex.OnlineStoreApplications.service.dto.RegistrationDto;
 import com.Alex.OnlineStoreApplications.service.dto.UpdateDto;
@@ -26,22 +25,21 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 
-public class CustomerServiceTest {
+public class UserServiceImplTest {
 
     @Mock
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
 
     @Mock
     private ProductRepository productRepository;
 
     @InjectMocks
-    private CustomerService customerService;
+    private UserServiceImpl customerService;
 
     @BeforeEach
     public void setUp() {
@@ -60,7 +58,7 @@ public class CustomerServiceTest {
         registrationDto.setPhone_number("(541) 754-3010");
         registrationDto.setPassword("josh-josh");
 
-        Customer customer = new Customer();
+        User customer = new User();
         customer.setId(1L);
         customer.setFirstName(registrationDto.getFirstName());
         customer.setLastName(registrationDto.getLastName());
@@ -68,13 +66,13 @@ public class CustomerServiceTest {
         customer.setPhoneNumber(registrationDto.getPhoneNumber());
         customer.setPassword(registrationDto.getPassword());
         customer.setCreatedAt(dateTime1);
-        customer.setSignedIn(Boolean.TRUE);
+        customer.setBlocked(Boolean.FALSE);
 
-        when(customerRepository.findByEmail(anyString())).thenReturn(Optional.empty());
-        when(customerRepository.save(any())).thenReturn(customer);
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(userRepository.save(any())).thenReturn(customer);
 
         // when
-        Long actualId = customerService.registerCustomer(registrationDto);
+        Long actualId = customerService.registerUser(registrationDto);
 
         // then
         assertEquals(actualId, customer.getId());
@@ -93,7 +91,7 @@ public class CustomerServiceTest {
         expectedDto.setPhone_number("(541) 754-3010");
         expectedDto.setPassword("josh-josh");
 
-        Customer customer = new Customer();
+        User customer = new User();
         customer.setId(1L);
         customer.setFirstName("alex");
         customer.setLastName("kiiumzhi");
@@ -101,13 +99,13 @@ public class CustomerServiceTest {
         customer.setPhoneNumber("(581) 757-3010");
         customer.setPassword("alex.alex");
         customer.setCreatedAt(dateTime1);
-        customer.setSignedIn(Boolean.TRUE);
+        customer.setBlocked(Boolean.FALSE);
 
-        when(customerRepository.findById(anyLong())).thenReturn(Optional.of(customer));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(customer));
 
         // when
-        customerService.updateCustomer(expectedDto);
-        Customer actualCustomer = customerRepository.findById(customer.getId()).get();
+        customerService.updateUser(expectedDto);
+        User actualCustomer = userRepository.findById(customer.getId()).get();
 
         // then
         assertCustomer(actualCustomer, expectedDto);
@@ -116,15 +114,15 @@ public class CustomerServiceTest {
     @Test
     public void deleteCustomer_shall_delete_a_customer() {
         // given
-        Customer customer = new Customer();
+        User customer = new User();
         customer.setId(1L);
         customer.setEmail("alex.kii@gmail.com");
 
-        when(customerRepository.findById(anyLong())).thenReturn(Optional.of(customer));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(customer));
 
         // when
-        customerService.deleteCustomer(customer.getId());
-        Optional<Customer> actualCustomer  = customerRepository.findByEmail(customer.getEmail());
+        customerService.deleteUser(customer.getId());
+        Optional<User> actualCustomer  = userRepository.findByEmail(customer.getEmail());
 
         // then
         assertFalse(actualCustomer.isPresent());
@@ -149,12 +147,12 @@ public class CustomerServiceTest {
         buyingDto.setId(1L);
         buyingDto.setProductIds(productsIds);
 
-        Customer customer = new Customer();
+        User customer = new User();
         customer.setId(1L);
-        customer.setSignedIn(Boolean.TRUE);
+        customer.setBlocked(Boolean.FALSE);
 
 
-        when(customerRepository.findById(anyLong())).thenReturn(Optional.of(customer));
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(customer));
         when(productRepository.findById(1L)).thenReturn(Optional.of(product1));
         when(productRepository.findById(2L)).thenReturn(Optional.of(product2));
 
@@ -166,7 +164,7 @@ public class CustomerServiceTest {
         assertEquals(actualPrice , expectedPrice);
     }
 
-    private void assertCustomer(Customer actualCustomer, UpdateDto expectedDto){
+    private void assertCustomer(User actualCustomer, UpdateDto expectedDto){
         assertEquals(actualCustomer.getId(), expectedDto.getId());
         assertEquals(actualCustomer.getFirstName(), expectedDto.getFirstName());
         assertEquals(actualCustomer.getLastName(), expectedDto.getLastName());

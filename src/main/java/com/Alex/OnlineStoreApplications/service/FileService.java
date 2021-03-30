@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface IFileService {
+public interface FileService {
     void uploadFile(UploadingDto uploadingDto);
     List<File> downloadFiles(Long customerId);
 }

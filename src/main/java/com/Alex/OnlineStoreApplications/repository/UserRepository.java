@@ -1,12 +1,12 @@
 package com.Alex.OnlineStoreApplications.repository;
 
-import com.Alex.OnlineStoreApplications.entity.Customer;
+import com.Alex.OnlineStoreApplications.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface CustomerRepository extends JpaRepository <Customer,Long> {
-    Optional<Customer> findByEmail(String email);}
+public interface UserRepository extends JpaRepository <User,Long> {
+    Optional<User> findByEmail(String email);}
 

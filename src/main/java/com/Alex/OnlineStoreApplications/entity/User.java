@@ -1,17 +1,27 @@
 package com.Alex.OnlineStoreApplications.entity;
 
+import com.Alex.OnlineStoreApplications.entity.enums.Role;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Table(name = "customer")
-public class Customer implements IEntity {
+@Table(name = "user")
+public class User implements IEntity, UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column (length = 100)
+    private Role role;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -31,13 +41,43 @@ public class Customer implements IEntity {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "is_signed_in")
-    private Boolean isSignedIn;
+    @Column(name = "is_Blocked")
+    private Boolean isBlocked;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "customer_file", joinColumns = @JoinColumn(name = "customer_id"),
+    @JoinTable(name = "user_file", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "file_id"))
     private List<File> files = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>(Collections.singleton(role));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isBlocked;
+    }
 
     @Override
     public Long getId() {
@@ -46,6 +86,14 @@ public class Customer implements IEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public String getFirstName() {
@@ -96,12 +144,12 @@ public class Customer implements IEntity {
         this.createdAt = CreatedAt;
     }
 
-    public Boolean getSignedIn() {
-        return isSignedIn;
+    public Boolean getBlocked() {
+        return isBlocked;
     }
 
-    public void setSignedIn(Boolean signedIn) {
-        isSignedIn = signedIn;
+    public void setBlocked(Boolean blocked) {
+        isBlocked = blocked;
     }
 
     public List<File> getFiles() {

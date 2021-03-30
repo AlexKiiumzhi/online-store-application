@@ -7,9 +7,9 @@ import com.Alex.OnlineStoreApplications.service.dto.UpdateDto;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface ICustomerService {
-    Long registerCustomer(RegistrationDto registrationDto);
-    void deleteCustomer(Long id);
-    void updateCustomer(UpdateDto updateDto);
+public interface UserService {
+    Long registerUser(RegistrationDto registrationDto);
+    void deleteUser(Long id);
+    void updateUser(UpdateDto updateDto);
     BigDecimal buy(BuyingDto buyingDto);
 }

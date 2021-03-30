@@ -1,12 +1,28 @@
 package com.Alex.OnlineStoreApplications.service.dto;
 
+import javax.validation.constraints.*;
+
 public class UpdateDto {
 
+    @NotNull
+    @Min(value=1)
     private Long id;
+    @Pattern(regexp="[A-Za-z]{3,100}")
+    @NotEmpty
     private String firstName;
+    @Pattern(regexp="[A-Za-z]{3,100}")
+    @NotEmpty
     private String lastName;
+    @NotBlank
+    @Email
     private String email;
+    @Pattern(regexp="[0-9]{10,20}")
+    @NotEmpty
     private String phoneNumber;
+    @NotNull
+    @NotBlank
+    @Pattern(regexp="[A-Z0-9a-z]{8,30}")
+    @Size(min = 8)
     private String password;
 
     public Long getId() {

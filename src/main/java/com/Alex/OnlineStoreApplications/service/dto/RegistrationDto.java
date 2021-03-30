@@ -1,12 +1,25 @@
 package com.Alex.OnlineStoreApplications.service.dto;
 
+import javax.validation.constraints.*;
+
 public class RegistrationDto {
 
+    @Pattern(regexp="[A-Za-z]{3,100}")
+    @NotEmpty
     private String firstName;
+    @Pattern(regexp="[A-Za-z]{3,100}")
+    @NotEmpty
     private String lastName;
+    @NotBlank
+    @Email
     private String email;
-    private String phoneNumber;
+    @Pattern(regexp="[A-Z0-9a-z]{8,30}")
+    @Size(min = 8)
     private String password;
+    @Pattern(regexp="[0-9]{10,20}")
+    @NotEmpty
+    private String phoneNumber;
+
 
     public String getFirstName() {
         return firstName;

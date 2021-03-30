@@ -1,9 +1,13 @@
 package com.Alex.OnlineStoreApplications.service.dto;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class BuyingDto {
 
+    @NotNull
+    @Min(value=1)
     private Long id;
     private List<Long> productIds;
 

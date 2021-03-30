@@ -5,16 +5,13 @@ import com.Alex.OnlineStoreApplications.entity.Category;
 import com.Alex.OnlineStoreApplications.entity.Product;
 import com.Alex.OnlineStoreApplications.repository.CategoryRepository;
 import com.Alex.OnlineStoreApplications.repository.ProductRepository;
-import com.Alex.OnlineStoreApplications.service.Impl.ProductService;
+import com.Alex.OnlineStoreApplications.service.Impl.ProductServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.math.BigDecimal;
@@ -22,12 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class ProductServiceTest {
+public class ProductServiceImplTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -36,7 +33,7 @@ public class ProductServiceTest {
     private CategoryRepository categoryRepository;
 
     @InjectMocks
-    private ProductService productService;
+    private ProductServiceImpl productServiceImpl;
 
     @BeforeEach
     public void setUp() {
@@ -73,7 +70,7 @@ public class ProductServiceTest {
         when(productRepository.findAll()).thenReturn(expectedProducts);
 
         // when
-        List<Product> actualProducts = productService.findAll();
+        List<Product> actualProducts = productServiceImpl.findAllProducts();
 
         // then
         int index = 0;
@@ -116,11 +113,11 @@ public class ProductServiceTest {
         expectedProducts.add(product2);
         expectedProducts.add(product3);
 
-        when(categoryRepository.getCategoryId(anyString())).thenReturn(category1.getId());
+        when(categoryRepository.getCategoryId(anyLong())).thenReturn(category1.getId());
         when(productRepository.findAll()).thenReturn(expectedProducts);
 
         // when
-        List<Product> actualProducts = productService.findAllByCategory();
+        List<Product> actualProducts = productServiceImpl.findAllByCategory(category1.getId());
 
         // then
         int index = 0;

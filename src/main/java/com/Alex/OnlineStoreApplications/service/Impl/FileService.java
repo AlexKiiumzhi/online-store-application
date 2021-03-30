@@ -2,11 +2,9 @@ package com.Alex.OnlineStoreApplications.service.Impl;
 
 import com.Alex.OnlineStoreApplications.Exceptions.CustomerNotFoundException;
 import com.Alex.OnlineStoreApplications.Exceptions.FileStorageException;
-import com.Alex.OnlineStoreApplications.entity.Customer;
+import com.Alex.OnlineStoreApplications.entity.User;
 import com.Alex.OnlineStoreApplications.entity.File;
-import com.Alex.OnlineStoreApplications.repository.CustomerRepository;
-import com.Alex.OnlineStoreApplications.repository.FileRepository;
-import com.Alex.OnlineStoreApplications.service.IFileService;
+import com.Alex.OnlineStoreApplications.repository.UserRepository;
 import com.Alex.OnlineStoreApplications.service.dto.UploadingDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,24 +15,21 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class FileService implements IFileService {
+public class FileService implements com.Alex.OnlineStoreApplications.service.FileService {
 
     @Autowired
-    private FileRepository fileRepository;
-
-    @Autowired
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
 
     public void uploadFile(UploadingDto uploadingDto) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(uploadingDto.getCustomerId());
+        Optional<User> optionalCustomer = userRepository.findById(uploadingDto.getCustomerId());
         if (optionalCustomer.isPresent()) {
             try {
                 if (Objects.requireNonNull(uploadingDto.getFile().getOriginalFilename()).contains("..")) {
                     throw new FileStorageException(uploadingDto.getFile().getOriginalFilename());
                 } else {
-                    Customer customer = customerRepository.getOne(uploadingDto.getCustomerId());
+                    User customer = userRepository.getOne(uploadingDto.getCustomerId());
                     customer.getFiles().add(mapUploadingDtoToFile(uploadingDto));
-                    customerRepository.save(customer);
+                    userRepository.save(customer);
                 }
             } catch (IOException ex) {
                 throw new FileStorageException(uploadingDto.getFile().getOriginalFilename(), ex);
@@ -45,7 +40,7 @@ public class FileService implements IFileService {
     }
 
     public List<File> downloadFiles(Long customerId) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(customerId);
+        Optional<User> optionalCustomer = userRepository.findById(customerId);
         if (optionalCustomer.isPresent()) {
             return optionalCustomer.get().getFiles();
         } else {

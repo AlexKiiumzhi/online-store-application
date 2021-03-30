@@ -1,20 +1,21 @@
 DROP TABLE IF EXISTS customer_file;
-DROP TABLE IF EXISTS customer;
+DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS file;
 
 
-CREATE TABLE customer
+CREATE TABLE user
 (
     id           INT AUTO_INCREMENT,
+    role         VARCHAR(100),
     first_name   VARCHAR(50) NOT NULL,
     last_name    VARCHAR(50) NOT NULL,
     email        varchar(80) NOT NULL,
     phone_number varchar(20) NOt NULL,
     password     varchar(50) NOT NULL,
     created_at   datetime    NOT NULL,
-    is_signed_in tinyint(1) default 0,
+    is_Blocked tinyint(1) default 0,
     unique (email),
     PRIMARY KEY (id)
 
@@ -47,12 +48,12 @@ CREATE TABLE file
     PRIMARY KEY (id)
 );
 
-CREATE TABLE customer_file
+CREATE TABLE user_file
 (
     file_id   INT         NOT NULL,
-    customer_id INT         NOT NULL,
+    user_id INT         NOT NULL,
     FOREIGN KEY (file_id) REFERENCES file (id),
-    FOREIGN KEY (customer_id) REFERENCES customer(id)
+    FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
 
